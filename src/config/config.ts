@@ -6,6 +6,9 @@ import * as ms from 'ms';
 @Injectable()
 export class Config {
 	@IsString()
+	public readonly REDIS_PASSWORD!: string;
+
+	@IsString()
 	public readonly DATABASE_URL!: string;
 
 	@IsString()

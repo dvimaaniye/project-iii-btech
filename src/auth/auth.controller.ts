@@ -1,7 +1,9 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
+	HttpStatus,
 	Post,
 	Req,
 	Res,
@@ -38,34 +40,55 @@ export class AuthController {
 		const { sessionId, ...tokens } = await this.authService.signIn({
 			userId: id,
 		});
-		res.cookie('session-id', sessionId, {
+		res.cookie('sessionId', sessionId, {
 			httpOnly: true,
 			sameSite: 'strict',
 			secure: true,
 		});
-		res.json(tokens);
+		res.cookie('refreshToken', tokens['refreshToken'], {
+			httpOnly: true,
+			sameSite: 'strict',
+			secure: true,
+			path: '/auth/refresh',
+		});
+		res.json({ accessToken: tokens['accessToken'] });
 		return res;
 	}
 
 	@UseGuards(AccessTokenGuard)
 	@Post('/sign-out')
 	signOut(@Req() req: Request) {
-		return this.authService.signOut(+req.cookies['session-id']);
+		return this.authService.signOut(+req.cookies['sessionId']);
 	}
 
-	@UseGuards(RefreshTokenGuard)
 	@Post('/refresh')
-	async refresh(
-		@ReqUser()
-		{ sessionId, ...refreshTokenPayload }: { sessionId: number; id: number },
-	) {
-		const payload = { sub: refreshTokenPayload.id };
+	async refresh(@Req() req: Request, @Res() res: Response): Promise<Response> {
+		if (!req.cookies['sessionId']) {
+			return res.sendStatus(HttpStatus.UNAUTHORIZED);
+		}
 
-		return this.authService.refresh(sessionId, payload);
+		const sessionId = +req.cookies['sessionId'];
+		const session = await this.sessionService.findOne({ id: sessionId });
+		if (!session) {
+			return res.sendStatus(HttpStatus.UNAUTHORIZED);
+		}
+
+		const payload = {
+			sub: session.userId,
+		};
+		const accessToken = await this.authService.refresh(sessionId, payload);
+
+		res.json({ accessToken });
+		return res;
 	}
 
 	@Get('/sessions')
 	findAll() {
 		return this.sessionService.findAll();
+	}
+
+	@Delete('/sessions')
+	deleteAll() {
+		return this.sessionService.deleteMany({});
 	}
 }

@@ -12,42 +12,43 @@ import {
 	Res,
 	UseGuards,
 } from '@nestjs/common';
-import { TodosService } from './todos.service';
-import { Prisma, Todo } from '@prisma/client';
+import { TasksService } from './tasks.service';
+import { Prisma, Task } from '@prisma/client';
 import { Response } from 'express';
 import { AccessTokenGuard } from 'src/auth/strategy/access-token.guard';
-import { CreateTodoDto } from './dto/create-todo.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
 import { ReqUser } from 'src/users/users.decorator';
+import { UpdateTaskDto } from './dto/update-task.dto';
 
 @UseGuards(AccessTokenGuard)
-@Controller('/todos')
-export class TodosController {
-	constructor(private readonly todosService: TodosService) {}
+@Controller('/tasks')
+export class TasksController {
+	constructor(private readonly tasksService: TasksService) {}
 
 	@Get()
-	async findAll(@ReqUser('id') userId: number): Promise<Todo[]> {
-		return this.todosService.findAll({ userId: userId });
+	async findAll(@ReqUser('id') userId: number): Promise<Task[]> {
+		return this.tasksService.findAll({ userId: userId });
 	}
 
 	@Post()
 	async create(
 		@ReqUser('id') userId: number,
-		@Body() data: CreateTodoDto,
-	): Promise<Todo> {
-		return this.todosService.create(userId, data);
+		@Body() data: CreateTaskDto,
+	): Promise<Task> {
+		return this.tasksService.create(userId, data);
 	}
 
 	@Get(':id')
 	async findOne(
 		@Param('id', ParseIntPipe) id: number,
 		@ReqUser('id') userId: number,
-	): Promise<Todo | null> {
-		const obj = await this.todosService.findOne({
+	): Promise<Task | null> {
+		const obj = await this.tasksService.findOne({
 			id: id,
 			userId: userId,
 		});
 		if (!obj) {
-			throw new NotFoundException(`Todo with id ${id} not found`);
+			throw new NotFoundException(`Task with id ${id} not found`);
 		}
 		return obj;
 	}
@@ -55,9 +56,9 @@ export class TodosController {
 	@Patch(':id')
 	async update(
 		@Param('id', ParseIntPipe) id: number,
-		@Body() data: Prisma.TodoUpdateInput,
-	): Promise<Todo> {
-		return this.todosService.update(id, data);
+		@Body() data: UpdateTaskDto,
+	): Promise<Task> {
+		return this.tasksService.update(id, data);
 	}
 
 	@Delete(':id')
@@ -65,14 +66,14 @@ export class TodosController {
 		@Param('id', ParseIntPipe) id: number,
 		@Res() res: Response,
 	): Promise<void> {
-		const deletedObj = await this.todosService.delete({ id });
+		const deletedObj = await this.tasksService.delete({ id });
 		if (deletedObj) {
 			res.send({
 				statusCode: HttpStatus.OK,
-				message: 'Todo deleted successfully',
+				message: 'Task deleted successfully',
 			});
 		} else {
-			throw new NotFoundException(`Todo with id ${id} not found`);
+			throw new NotFoundException(`Task with id ${id} not found`);
 		}
 	}
 	@Get('/hello')

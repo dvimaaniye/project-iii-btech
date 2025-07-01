@@ -26,7 +26,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy) {
 		payload: { sub: number },
 	): Promise<{ id: number }> {
 		const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-		const sessionId = parseInt(req.cookies['session-id'] as string);
+		const sessionId = parseInt(req.cookies['sessionId'] as string);
 
 		const [user, session] = await Promise.all([
 			await this.authService.validateUserWithId(payload.sub),

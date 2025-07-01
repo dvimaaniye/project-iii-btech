@@ -24,7 +24,7 @@ export class TokenService {
 
 	constructor(private readonly jwtService: JwtService) {}
 
-	async getAccessToken(data: Buffer | object) {
+	async createAccessToken(data: Buffer | object) {
 		return this.jwtService.signAsync(data, this.accessTokenSignOpts);
 	}
 
@@ -32,7 +32,7 @@ export class TokenService {
 		return this.jwtService.verifyAsync(token, this.accessTokenVerifyOpts);
 	}
 
-	async getRefreshToken(data: Buffer | object) {
+	async createRefreshToken(data: Buffer | object) {
 		return this.jwtService.signAsync(data, this.refreshTokenSignOpts);
 	}
 

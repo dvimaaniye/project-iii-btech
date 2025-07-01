@@ -29,7 +29,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
 		payload: { sub: number },
 	): Promise<{ id: number; sessionId: number }> {
 		const refreshToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-		const sessionId = parseInt(req.cookies['session-id'] as string);
+		const sessionId = parseInt(req.cookies['sessionId'] as string);
 
 		const [user, session] = await Promise.all([
 			await this.authService.validateUserWithId(payload.sub),

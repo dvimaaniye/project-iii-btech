@@ -3,11 +3,12 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+    provider          = "mysql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Todo {
+model Task {
     id         Int      @id @default(autoincrement())
     name       String
     status     String   @default("pending")
@@ -25,7 +26,7 @@ model User {
     password   String
     firstName  String
     lastName   String?
-    todos      Todo[]
+    tasks      Task[]
     Session    Session[]
     createdAt  DateTime  @default(now())
     modifiedAt DateTime  @updatedAt

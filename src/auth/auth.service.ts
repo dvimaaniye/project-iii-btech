@@ -51,8 +51,8 @@ export class AuthService {
 		sessionId: number;
 	}> {
 		const [accessToken, refreshToken] = await Promise.all([
-			this.tokenService.getAccessToken({ sub: userId }),
-			this.tokenService.getRefreshToken({ sub: userId }),
+			this.tokenService.createAccessToken({ sub: userId }),
+			this.tokenService.createRefreshToken({ sub: userId }),
 		]);
 		const [accessTokenHash, refreshTokenHash] = await Promise.all([
 			this.hashService.hash(accessToken),
@@ -83,11 +83,9 @@ export class AuthService {
 	}
 
 	async refresh(sessionId: number, payload: object) {
-		const newAccessToken = await this.tokenService.getAccessToken(payload);
-		const newAccessTokenHash = await this.hashService.hash(newAccessToken);
-		await this.sessionService.updateAccessToken(sessionId, newAccessTokenHash);
-		return {
-			accessToken: newAccessToken,
-		};
+		const accessToken = await this.tokenService.createAccessToken(payload);
+		const accessTokenHash = await this.hashService.hash(accessToken);
+		await this.sessionService.updateAccessToken(sessionId, accessTokenHash);
+		return accessToken;
 	}
 }
