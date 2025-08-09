@@ -10,8 +10,8 @@ import { BullModule } from '@nestjs/bullmq';
 import { ConnectionOptions } from 'bullmq';
 
 const redisConnection: ConnectionOptions = {
-	host: 'localhost',
-	port: 6379,
+	host: config.REDIS_HOST,
+	port: config.REDIS_PORT,
 	password: config.REDIS_PASSWORD,
 };
 

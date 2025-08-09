@@ -1,28 +1,39 @@
 services:
+  node:
+    build:
+      context: ./docker/node/
+      dockerfile: node.Dockerfile
+    container_name: pms-node
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/home/app/
+    tty: true
+
+  mysql:
+    build: 
+      context: ./docker/mysql/
+      dockerfile: mysql.Dockerfile
+    container_name: pms-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    env_file: ./docker/mysql/.env.mysql
+    restart: always
+
   redis:
-    image: redis:8.0.2
+    image: redis:8.2.0-alpine
     container_name: pms-redis
     ports:
       - "6379:6379"
     volumes:
-      - "./docker/redis.conf:/usr/local/etc/redis/redis.conf"
-      - "./redis_data:/data"
-    env_file:
-      - .env.redis
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./docker/redis/data:/data
+    env_file: ./docker/redis/.env.redis
     restart: always
     command: [
       "redis-server",
       "/usr/local/etc/redis/redis.conf",
-      "--requirepass", "${REDIS_PASSWORD}"
+      "--requirepass ${REDIS_PASSWORD}"
     ]
-
-  mysql:
-     image: mysql:8.2
-     container_name: pms-mysql
-     ports:
-       - "3306:3306"
-     volumes:
-       - ./mysql_data:/var/lib/mysql
-     env_file:
-       - .env.mysql
-     restart: always

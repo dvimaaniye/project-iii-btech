@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Transform } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsPort, IsString } from 'class-validator';
 import * as ms from 'ms';
 
 @Injectable()
 export class Config {
+	@IsString()
+	public readonly REDIS_HOST!: string;
+
+	@IsPort()
+	public readonly REDIS_PORT!: number;
+
 	@IsString()
 	public readonly REDIS_PASSWORD!: string;
 

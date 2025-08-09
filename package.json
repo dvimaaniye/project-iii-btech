@@ -6,6 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prisma:generate": "prisma generate client",
+    "prisma:push": "prisma db push",
+    "prisma:dev": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:reset": "prisma migrate reset",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -98,8 +103,14 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
       "argon2",
-      "bcrypt"
+      "bcrypt",
+      "esbuild",
+      "msgpackr-extract",
+      "prisma"
     ]
   }
 }
