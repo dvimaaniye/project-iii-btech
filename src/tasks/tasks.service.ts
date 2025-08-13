@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { Task, Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskQueueService } from './queue/task-queue.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class TasksService {

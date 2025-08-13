@@ -15,12 +15,11 @@ import {
 import { TasksService } from './tasks.service';
 import { Prisma, Task } from '@prisma/client';
 import { Response } from 'express';
-import { AccessTokenGuard } from 'src/auth/strategy/access-token.guard';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { ReqUser } from 'src/users/users.decorator';
+import { ReqUser } from 'src/user/user.decorator';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
-@UseGuards(AccessTokenGuard)
+// @UseGuards(AccessTokenGuard)
 @Controller('/tasks')
 export class TasksController {
 	constructor(private readonly tasksService: TasksService) {}

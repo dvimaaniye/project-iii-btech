@@ -1,33 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { Transform } from 'class-transformer';
-import { IsNumber, IsPort, IsString } from 'class-validator';
-import * as ms from 'ms';
+import { IsNumber, IsString } from 'class-validator';
+import { StringValue } from 'ms';
 
 @Injectable()
 export class Config {
 	@IsString()
-	public readonly REDIS_HOST!: string;
-
-	@IsPort()
-	public readonly REDIS_PORT!: number;
+	public readonly NODE_ENV!: string;
 
 	@IsString()
-	public readonly REDIS_PASSWORD!: string;
+	public readonly REDIS_URL!: string;
 
+	// @IsString()
+	// public readonly REDIS_HOST!: string;
+	//
+	// @IsNumber()
+	// @Transform(({ value }) => Number(value))
+	// public readonly REDIS_PORT!: number;
+	//
+	// @IsString()
+	// public readonly REDIS_PASSWORD!: string;
+	//
 	@IsString()
 	public readonly DATABASE_URL!: string;
 
 	@IsString()
-	public readonly JWT_ACCESS_TOKEN_SECRET!: string;
+	public readonly SESSION_TTL!: StringValue;
 
 	@IsString()
-	public readonly JWT_REFRESH_TOKEN_SECRET!: string;
-
-	@Transform(({ value }) => ms(value as ms.StringValue))
-	@IsNumber()
-	public readonly JWT_ACCESS_TOKEN_EXPIRES_IN: number;
-
-	@Transform(({ value }) => ms(value as ms.StringValue))
-	@IsNumber()
-	public readonly JWT_REFRESH_TOKEN_EXPIRES_IN: number;
+	public readonly SESSION_SECRET!: string;
 }

@@ -2,35 +2,15 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
-import { UsersModule } from 'src/users/users.module';
+import { UserModule } from 'src/user/user.module';
 import { LocalStrategy } from './strategy/local.strategy';
-import { AccessTokenStrategy } from './strategy/access-token.strategy';
 import { SessionService } from './session.service';
-import PrismaModule from 'src/prisma/prisma.module';
-import MyJwtModule from './jwt.module';
-import { SessionCleanupService } from './session-cleanup.service';
-import { RefreshTokenStrategy } from './strategy/refresh-token.strategy';
-import { TokenService } from './token.service';
 import { HashModule } from 'src/hash/hash.module';
+import { SessionSerializer } from './session.serializer';
 
 @Module({
-	imports: [
-		HashModule,
-		AuthModule,
-		UsersModule,
-		PassportModule,
-		PrismaModule,
-		MyJwtModule,
-	],
-	providers: [
-		TokenService,
-		AuthService,
-		SessionService,
-		SessionCleanupService,
-		LocalStrategy,
-		AccessTokenStrategy,
-		RefreshTokenStrategy,
-	],
+	imports: [HashModule, UserModule, PassportModule.register({ session: true })],
+	providers: [SessionSerializer, AuthService, SessionService, LocalStrategy],
 	controllers: [AuthController],
 })
 export class AuthModule {}

@@ -2,28 +2,27 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { config, ConfigModule } from './config/config.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bullmq';
-import { ConnectionOptions } from 'bullmq';
-
-const redisConnection: ConnectionOptions = {
-	host: config.REDIS_HOST,
-	port: config.REDIS_PORT,
-	password: config.REDIS_PASSWORD,
-};
+import { CommonModule } from './common/common.module';
+import { REDIS_DATABASE } from './common/redis/redis.config';
 
 @Module({
 	imports: [
 		ConfigModule,
+		CommonModule,
 		BullModule.forRoot({
-			connection: redisConnection,
+			connection: {
+				url: config.REDIS_URL,
+				db: REDIS_DATABASE.QUEUE,
+			},
 		}),
 		ScheduleModule.forRoot(),
 		TasksModule,
-		UsersModule,
+		UserModule,
 		AuthModule,
 	],
 	controllers: [AppController],
