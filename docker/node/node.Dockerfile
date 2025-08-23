@@ -7,3 +7,4 @@ USER node
 WORKDIR /home/app
 
 EXPOSE 3000
+EXPOSE 5555

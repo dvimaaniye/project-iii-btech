@@ -1,9 +1,10 @@
 import {
-	Injectable,
+	BadRequestException,
 	CanActivate,
 	ExecutionContext,
-	BadRequestException,
+	Injectable,
 } from '@nestjs/common';
+
 import { Request } from 'express';
 
 @Injectable()

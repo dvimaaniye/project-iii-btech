@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
+
+import { HashModule } from '@/hash/hash.module';
+
+import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { HashModule } from 'src/hash/hash.module';
 
 @Module({
 	imports: [HashModule],
-	controllers: [],
+	controllers: [UserController],
 	providers: [UserService],
 	exports: [UserService],
 })

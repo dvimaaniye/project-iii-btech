@@ -1,11 +1,13 @@
+import { DynamicModule } from '@nestjs/common';
+
 import {
 	DotenvLoaderOptions,
 	TypedConfigModule,
 	dotenvLoader,
 	selectConfig,
 } from 'nest-typed-config';
+
 import { Config } from './config';
-import { DynamicModule } from '@nestjs/common';
 
 const options: DotenvLoaderOptions = {
 	expandVariables: true,

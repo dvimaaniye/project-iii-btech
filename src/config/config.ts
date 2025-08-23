@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { Transform } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 import { StringValue } from 'ms';
@@ -29,4 +30,10 @@ export class Config {
 
 	@IsString()
 	public readonly SESSION_SECRET!: string;
+
+	@IsString()
+	public readonly EMAIL_VERIFICATION_TOKEN_TTL!: StringValue;
+
+	@IsString()
+	public readonly EMAIL_VERIFICATION_TOKEN_SECRET!: string;
 }

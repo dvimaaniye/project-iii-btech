@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
 import * as cookieParser from 'cookie-parser';
+import { NextFunction, Request, Response } from 'express';
 
 const cookieParserMiddleware = cookieParser();
 

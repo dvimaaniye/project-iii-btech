@@ -1,5 +1,6 @@
 import { RedisClientOptions } from 'redis';
-import { config } from 'src/config/config.module';
+
+import { config } from '@/config/config.module';
 
 export const baseRedisConnectionOptions: RedisClientOptions = {
 	url: config.REDIS_URL,

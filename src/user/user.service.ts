@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+
 import { Prisma, User } from '@prisma/client';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { HashService } from 'src/hash/hash.service';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 import { PrismaService } from 'nestjs-prisma';
 
-export type PublicUser = Omit<User, 'password'>;
+import { HashService } from '@/hash/hash.service';
+
+import { CreateUserDto, PublicUser } from './types';
 
 @Injectable()
 export class UserService {
@@ -34,10 +36,21 @@ export class UserService {
 		return users;
 	}
 
-	async findOne(id: number): Promise<PublicUser | null> {
+	async findOne(id: PublicUser['id']): Promise<PublicUser | null> {
 		const user = await this.prisma.user.findUnique({
 			where: { id },
 			...this.publicUserConfig,
+		});
+		return user;
+	}
+
+	async findOneAndSelect(
+		id: PublicUser['id'],
+		select: Omit<Prisma.UserSelect<DefaultArgs>, 'password'>,
+	) {
+		const user = await this.prisma.user.findUnique({
+			where: { id },
+			select,
 		});
 		return user;
 	}
@@ -53,7 +66,7 @@ export class UserService {
 	}
 
 	// For authentication - returns user with password for verification
-	async findOneWithPassword(id: number): Promise<User | null> {
+	async findOneWithPassword(id: PublicUser['id']): Promise<User | null> {
 		const user = await this.prisma.user.findUnique({ where: { id } });
 		return user;
 	}
@@ -73,7 +86,7 @@ export class UserService {
 	}
 
 	async update(
-		id: number,
+		id: PublicUser['id'],
 		userPatch: Prisma.UserUpdateInput,
 	): Promise<PublicUser> {
 		// If password is being updated, hash it first
@@ -89,7 +102,7 @@ export class UserService {
 		return user;
 	}
 
-	async delete(id: number): Promise<PublicUser> {
+	async delete(id: PublicUser['id']): Promise<PublicUser> {
 		const user = await this.prisma.user.delete({
 			where: { id },
 			...this.publicUserConfig,
@@ -97,7 +110,7 @@ export class UserService {
 		return user;
 	}
 
-	async exists(id: number): Promise<boolean> {
+	async exists(id: PublicUser['id']): Promise<boolean> {
 		const user = await this.prisma.user.findUnique({
 			where: { id },
 			...this.userIdOnlyConfig,

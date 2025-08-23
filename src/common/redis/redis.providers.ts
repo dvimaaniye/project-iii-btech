@@ -1,6 +1,11 @@
-import { createClient, RedisClientType } from 'redis';
 import { Provider } from '@nestjs/common';
+
 import { RedisStore } from 'connect-redis';
+import * as ms from 'ms';
+import { RedisClientType, createClient } from 'redis';
+
+import { config } from '@/config/config.module';
+
 import {
 	REDIS_CACHE_CLIENT,
 	REDIS_QUEUE_CLIENT,
@@ -8,8 +13,6 @@ import {
 	REDIS_SESSION_STORE,
 	connectionOptions,
 } from './redis.config';
-import { config } from 'src/config/config.module';
-import * as ms from 'ms';
 
 export const redisClientProviders: Provider[] = [
 	{

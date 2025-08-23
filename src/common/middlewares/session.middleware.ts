@@ -1,11 +1,13 @@
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+
+import { RedisStore } from 'connect-redis';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import * as session from 'express-session';
 import { SessionOptions } from 'express-session';
-import { config } from 'src/config/config.module';
-import { REDIS_SESSION_STORE } from 'src/common/redis/redis.config';
-import { RedisStore } from 'connect-redis';
 import * as ms from 'ms';
+
+import { REDIS_SESSION_STORE } from '@/common/redis/redis.config';
+import { config } from '@/config/config.module';
 
 @Injectable()
 export class SessionMiddleware implements NestMiddleware {

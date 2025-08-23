@@ -1,30 +1,32 @@
-import { Module, NestModule, MiddlewareConsumer, Global } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import {
 	APP_FILTER,
-	APP_PIPE,
-	APP_INTERCEPTOR,
 	APP_GUARD,
+	APP_INTERCEPTOR,
+	APP_PIPE,
 	HttpAdapterHost,
 } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { securityMiddleware } from './middlewares/security.middleware';
-import { cookieMiddleware } from './middlewares/cookie.middleware';
-import { SessionMiddleware } from './middlewares/session.middleware';
-import { GlobalExceptionFilter } from './filters/global-exception.filter';
-import { globalValidationPipe } from './pipes/validation.pipe';
-// import { LoggingInterceptor } from './interceptors/logging.interceptor';
-import { GlobalThrottlerGuard } from './guards/throttle.guard';
+
+import { RequestHandler } from 'express';
 import * as ms from 'ms';
-import { prismaExceptionFilter } from './filters/prisma-exception.filter';
-import { RedisModule } from './redis/redis.module';
 import { PrismaModule } from 'nestjs-prisma';
 import * as passport from 'passport';
-import { RequestHandler } from 'express';
+
+import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import { prismaExceptionFilter } from './filters/prisma-exception.filter';
+// import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { GlobalThrottlerGuard } from './guards/throttle.guard';
+import { cookieMiddleware } from './middlewares/cookie.middleware';
+import { securityMiddleware } from './middlewares/security.middleware';
+import { SessionMiddleware } from './middlewares/session.middleware';
+import { globalValidationPipe } from './pipes/validation.pipe';
+import { RedisModule } from './redis/redis.module';
 
 @Global()
 @Module({
 	imports: [
-		PrismaModule,
+		PrismaModule.forRoot({ isGlobal: true }),
 		RedisModule,
 		ThrottlerModule.forRoot([
 			{
@@ -66,7 +68,7 @@ export class CommonModule implements NestModule {
 				securityMiddleware,
 				cookieMiddleware,
 				SessionMiddleware,
-				passport.initialize(),
+				// passport.initialize(),
 				passport.session() as RequestHandler,
 			)
 			.forRoutes('*');
